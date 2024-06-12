@@ -1,0 +1,1 @@
+openocd.exe -s ./scripts/ -f interface/stlink.cfg -f target/stm32f4x.cfg -c "bindto 0.0.0.0"
