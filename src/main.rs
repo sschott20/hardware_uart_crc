@@ -8,7 +8,7 @@ mod led;
 use core::{convert::TryInto, fmt::Write};
 
 use crate::hal::prelude::*;
-use crc::{Packet, MESSAGE_LENGTH};
+use crc::*;
 use led::Color::*;
 use led::*;
 use stm32f4xx_hal::{
@@ -35,12 +35,6 @@ fn main() -> ! {
     // Configure the clocks on the board.
     let clocks: stm32f4xx_hal::rcc::Clocks = dp.RCC.constrain().cfgr.freeze();
 
-    // Take the pins used for USART1.
-    // PA9 is for TX, PA10 is for RX.
-    // They should be set to mode alternative function 7.
-    // See STM32F405 datasheet for details.
-    // https://www.st.com/resource/en/datasheet/stm32f405rg.pdf
-
     let gpiod = dp.GPIOD.split();
     let mut delay = p.SYST.delay(&clocks);
 
@@ -65,24 +59,18 @@ fn main() -> ! {
         )
         .unwrap();
 
+    let mut uart_crc = UartCrc::new(usart2, &mut delay);
     leds.on(Blue);
 
-    let mut message: [u8; 60] = [0; 60];
-    for i in 0..MESSAGE_LENGTH {
-        message[i] = i as u8;
+    let mut binary = [0; FILE_SIZE];
+    for i in 0..FILE_SIZE {
+        binary[i] = i as u8;
     }
-    let data = Packet::new(message);
-    // usart2.read().unwrap();
-    data.send(&mut usart2, &mut delay);
 
-    let mut received: [u8; MESSAGE_LENGTH] = [0; MESSAGE_LENGTH];
+    uart_crc.send_binary(binary);
 
-    for i in 0..MESSAGE_LENGTH {
-        received[i] = block!(usart2.read()).unwrap();
-    }
-    for i in 0..MESSAGE_LENGTH {
-        hprintln!("Received: {}", received[i]).unwrap();
-    }
+    
+
     loop {
         circle(&mut leds, &mut delay, 100);
     }
