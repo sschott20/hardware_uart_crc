@@ -68,13 +68,21 @@ fn main() -> ! {
     leds.on(Blue);
 
     let mut message: [u8; 60] = [0; 60];
-    // for i in 0..MESSAGE_LENGTH {
-    //     message[i] = i as u8;
-    // }
+    for i in 0..MESSAGE_LENGTH {
+        message[i] = i as u8;
+    }
     let data = Packet::new(message);
     // usart2.read().unwrap();
     data.send(&mut usart2, &mut delay);
 
+    let mut received: [u8; MESSAGE_LENGTH] = [0; MESSAGE_LENGTH];
+
+    for i in 0..MESSAGE_LENGTH {
+        received[i] = block!(usart2.read()).unwrap();
+    }
+    for i in 0..MESSAGE_LENGTH {
+        hprintln!("Received: {}", received[i]).unwrap();
+    }
     loop {
         circle(&mut leds, &mut delay, 100);
     }

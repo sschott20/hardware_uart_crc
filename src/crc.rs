@@ -6,6 +6,7 @@ use stm32f4xx_hal::{
 };
 pub const MESSAGE_LENGTH: usize = 60;
 pub const CHECKSUM_LENGTH: usize = 4;
+pub const PACKET_LENGTH: usize = MESSAGE_LENGTH + CHECKSUM_LENGTH;
 
 #[derive()]
 pub struct Packet {
