@@ -21,7 +21,7 @@ pub enum Color {
 }
 
 pub struct Leds {
-    leds: [Led; 4],
+    pub leds: [Led; 4],
 }
 pub struct Led {
     pin: PDn<Output<PushPull>>,

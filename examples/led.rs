@@ -23,7 +23,7 @@ pub enum Color {
 pub struct Leds {
     leds: [Led; 4],
 }
-pub struct Led {
+struct Led {
     pin: PDn<Output<PushPull>>,
 }
 
@@ -84,6 +84,14 @@ impl Leds {
             Color::Red => self.leds[1].off(),
             Color::Blue => self.leds[2].off(),
             Color::Green => self.leds[3].off(),
+        }
+    }
+    pub fn toggle(&mut self, color: Color) {
+        match color {
+            Color::Orange => self.leds[0].toggle(),
+            Color::Red => self.leds[1].toggle(),
+            Color::Blue => self.leds[2].toggle(),
+            Color::Green => self.leds[3].toggle(),
         }
     }
 }

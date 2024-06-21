@@ -3,12 +3,12 @@
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 
-mod crc;
+mod uart;
 mod led;
 use core::{convert::TryInto, fmt::Write};
 
 use crate::hal::prelude::*;
-use crc::*;
+use uart::*;
 use led::Color::*;
 use led::*;
 use stm32f4xx_hal::{
